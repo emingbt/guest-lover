@@ -43,8 +43,10 @@ router.delete('/all/:name', async (req, res) => {
 
 router.post('/:id/home/add/', async (req, res) => {
     const traveler = await TravelerService.find(req.params.id)
-    const home = await HomeService.add(req.body)
-    await TravelerService.addHome(traveler, home.id)
+    const homeToCreate = {owner: traveler, location: req.body.location}
+    const home = await HomeService.add(homeToCreate)
+    home.owner = homeToCreate
+    await TravelerService.addHome(traveler, home)
     res.send(traveler)
 })
 
@@ -58,7 +60,7 @@ router.post('/:id/home/:homeId', async (req, res) => {
     const traveler = await TravelerService.find(req.params.id)
     const home = await HomeService.find(req.params.homeId)
     const owner = await TravelerService.find(home.owner)
-    console.log('test', owner)
+
     await TravelerService.sendRequest(traveler, home, owner)
 
     res.send(traveler)
@@ -70,7 +72,7 @@ router.post('/:id/requests/:requestId/:response', async (req, res) => {
     const requirer = await TravelerService.find(request)
     const home = await HomeService.find(traveler.home._id)
     const response = req.params.response
-    console.log(home, 'test1', traveler.home._id)
+
     await TravelerService.replyRequest(traveler, request, requirer, home, response)
     res.send(traveler)
 })
