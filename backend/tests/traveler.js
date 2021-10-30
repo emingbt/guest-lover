@@ -6,7 +6,7 @@ test('Create new traveler', async t => {
   t.plan(3)
   const travelerToCreate = {
     name: 'Garavel Usta',
-    age: 21
+    age: 100
   }
 
   const res = await request(app)
@@ -23,7 +23,7 @@ test('Fetch a traveler', async t => {
   t.plan(3)
   const travelerToCreate = {
     name: 'Garavel Usta',
-    age: 21
+    age: 100
   }
 
   const travelerCreated = (await request(app)
@@ -44,7 +44,7 @@ test('Delete a traveler', async t => {
   t.plan(3)
   const travelerToCreate = {
     name: 'Garavel Usta',
-    age: 21
+    age: 100
   }
 
   const travelerCreated = (await request(app)
@@ -55,14 +55,14 @@ test('Delete a traveler', async t => {
   t.is(deleteRes.status, 200)
   t.is(deleteRes.ok, true)
 
-  const fetch = await request(app).get(`/traveler/${travelerCreated._id}/json`)
-  t.is(fetch.status, 404)
+  const fetchTraveler = await request(app).get(`/traveler/${travelerCreated._id}/json`)
+  t.is(fetchTraveler.status, 404)
 })
 
 test('Get list of travelers', async t => {
   const travelerToCreate = {
     name: 'Garavel Usta',
-    age: 21
+    age: 100
   }
 
   const createRes = await request(app)
@@ -79,23 +79,60 @@ test('Get list of travelers', async t => {
 })
 
 test('Add a new home to traveler', async t => {
+  t.plan(3)
   const travelerToCreate = {
     name: 'Garavel Usta',
-    age: 21
+    age: 100
   }
 
   const travelerCreated = (await request(app)
     .post('/traveler')
     .send(travelerToCreate)).body
 
-  const homeToAdd = {
+  const homeToCreate = {
     owner: travelerCreated._id,
-    location: 'Ankara'
+    location: 'Gora'
   }
-  
-  const addHomeRes = await request(app).post(`/traveler/${travelerCreated._id}/home/add/`).send(homeToAdd)
+
+  const addHomeRes = await request(app).post(`/traveler/${travelerCreated._id}/home/add/`).send(homeToCreate)
   t.is(addHomeRes.status, 200)
-  
+
   const travelerAddedHome = (await request(app).get(`/traveler/${travelerCreated._id}/json`)).body
-  t.is(travelerAddedHome.home, homeToAdd.owner)
+  t.is(travelerAddedHome._id, homeToCreate.owner)
+
+  const homeCreated = (await request(app).get(`/home/${travelerAddedHome.home._id}/json`)).body
+  t.is(travelerAddedHome.home._id, homeCreated._id)
+})
+
+test('Delete a home from traveler', async t => {
+  t.plan(4)
+  const travelerToCreate = {
+    name: 'Garavel Usta',
+    age: 100
+  }
+
+  const travelerCreated = (await request(app)
+    .post('/traveler')
+    .send(travelerToCreate)).body
+
+  const homeToCreate = {
+    owner: travelerCreated._id,
+    location: 'Gora'
+  }
+
+  const addHomeRes = await request(app).post(`/traveler/${travelerCreated._id}/home/add/`).send(homeToCreate)
+
+  const travelerAddedHome = (await request(app).get(`/traveler/${travelerCreated._id}/json`)).body
+
+  const homeCreated = (await request(app).get(`/home/${travelerAddedHome.home._id}/json`)).body
+
+  const deleteHomeRes = await request(app).delete(`/traveler/${travelerAddedHome._id}/home`)
+  t.is(deleteHomeRes.status, 200)
+  t.is(deleteHomeRes.ok, true)
+
+  const fetchHome = await request(app).get(`/home/${homeCreated._id}`)
+  t.is(fetchHome.status, 404)
+
+  const travelerDeletedHome = (await request(app).get(`/traveler/${travelerCreated._id}/json`)).body
+  t.is(travelerDeletedHome.home, undefined)
 })
