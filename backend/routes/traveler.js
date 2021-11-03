@@ -47,14 +47,17 @@ router.post('/:id/home/add/', async (req, res) => {
     const traveler = await TravelerService.find(req.params.id)
     const homeToCreate = {owner: traveler, location: req.body.location}
     const home = await HomeService.add(homeToCreate)
-    home.owner = homeToCreate
+
     await TravelerService.addHome(traveler, home)
+
     res.send(traveler)
 })
 
 router.delete('/:id/home', async (req, res) => {
     const traveler = await TravelerService.find(req.params.id)
+
     await TravelerService.deleteHome(traveler)
+
     res.send(traveler)
 })
 

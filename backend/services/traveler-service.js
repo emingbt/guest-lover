@@ -1,12 +1,13 @@
 const BaseService = require('./base-service')
 const TravelerModel = require('../models/traveler')
 const HomeService = require('./home-service')
+const RequestModel = require('../models/request')
 
 class TravelerService extends BaseService {
     model = TravelerModel
 
-    async addHome(traveler, home) {
-        traveler.home = home
+    async addHome(traveler, travelerHome) {
+        traveler.home = travelerHome
         await traveler.save()
     }
 
