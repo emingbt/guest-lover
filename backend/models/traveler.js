@@ -12,14 +12,13 @@ const TravelerSchema = new mongoose.Schema({
         required: true,
         min: 18
     },
-    requestActive: {
-        type: Array,
-        default: []
-    },
-    requestPast: {
-        type: Array,
-        default: []
-    },
+    bookRequest: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Request',
+        autopopulate: {
+            maxDepth: 1
+        }
+    }],
     home: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Home',

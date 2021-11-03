@@ -1,12 +1,13 @@
 const BaseService = require('./base-service')
 const TravelerModel = require('../models/traveler')
 const HomeService = require('./home-service')
+const RequestModel = require('../models/request')
 
 class TravelerService extends BaseService {
     model = TravelerModel
 
-    async addHome(traveler, home) {
-        traveler.home = home
+    async addHome(traveler, travelerHome) {
+        traveler.home = travelerHome
         await traveler.save()
     }
 
@@ -16,35 +17,28 @@ class TravelerService extends BaseService {
         await traveler.save()
     }
 
-    async sendRequest(traveler, home, owner) {
-        traveler.requestActive.push(home._id)
-        owner.requestActive.push(traveler._id)
+    async askHost(traveler, home, owner) {
+        const request = await RequestModel.create({requester: traveler, home: home, status: 'pending'})
+        console.log('test', traveler.bookRequest)
+        traveler.bookRequest.push(request)
+        owner.bookRequest.push(request)
+
         await traveler.save()
         await owner.save()
     }
 
-    async replyRequest(traveler, request, requirer, home, response) {
-        if(response == 'accept') {
-            home.guests.push(request)
-            traveler.home.guests.push(request)
+    async replyTraveler(host, bookRequest, response) {
+        if (response == 'accept') {
+            host.home.guests.push(bookRequest.requester)
+            bookRequest.status = 'current'
 
-            requirer.requestPast.push([traveler._id, 'accepted'])
-            traveler.requestPast.push([request, 'accepted'])
-
-            traveler.requestActive.splice(traveler.requestActive.indexOf(request), 1)
-            requirer.requestActive.splice(requirer.requestActive.indexOf(traveler._id, 1))
+            await bookRequest.save()
+            await host.home.save()
         }
         else {
-            requirer.requestPast.push([traveler._id, 'rejected'])
-            traveler.requestPast.push([request, 'rejected'])
-
-            traveler.requestActive.splice(traveler.requestActive.indexOf(request), 1)
-            requirer.requestActive.splice(requirer.requestActive.indexOf(traveler._id, 1))
+            bookRequest.status = 'cancelled'
+            await bookRequest.save()
         }
-
-        await traveler.save()
-        await requirer.save()
-        await home.save()
     }
 }
 
