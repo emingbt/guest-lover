@@ -4,6 +4,8 @@ const router = express.Router()
 const TravelerService = require('../services/traveler-service')
 const HomeService = require('../services/home-service')
 
+const RequestModel = require('../models/request')
+
 router.get('/all', async (req, res) => {
     const travelers = await TravelerService.findAll()
     res.render('list', {items: travelers})
@@ -61,20 +63,19 @@ router.post('/:id/home/:homeId', async (req, res) => {
     const home = await HomeService.find(req.params.homeId)
     const owner = await TravelerService.find(home.owner)
 
-    await TravelerService.sendRequest(traveler, home, owner)
+    await TravelerService.askHost(traveler, home, owner)
 
     res.send(traveler)
 })
 
-router.post('/:id/requests/:requestId/:response', async (req, res) => {
-    const traveler = await TravelerService.find(req.params.id)
-    const request = traveler.requestActive[req.params.requestId]
-    const requirer = await TravelerService.find(request)
-    const home = await HomeService.find(traveler.home._id)
+router.post('/:id/requests/:requestId/:response', async (req, res) => { // burada mi yoksa servicede mi yapilmali???
+    const host = await TravelerService.find(req.params.id)
+    const bookRequest = await RequestModel.findById(req.params.requestId)
     const response = req.params.response
 
-    await TravelerService.replyRequest(traveler, request, requirer, home, response)
-    res.send(traveler)
+    await TravelerService.replyTraveler(host, bookRequest, response)
+
+    res.send(host)
 })
 
 module.exports = router
