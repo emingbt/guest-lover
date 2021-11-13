@@ -5,11 +5,12 @@ const HomeSchema = new mongoose.Schema({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Traveler',
-        autopopulate: {
-            maxDepth: 1
-        }
+        required: true
     },
-    location: String,
+    location: {
+        type: String,
+        required: true
+    },
     guests: Array
 })
 

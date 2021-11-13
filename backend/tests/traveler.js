@@ -104,35 +104,113 @@ test('Add a new home to traveler', async t => {
   t.is(travelerAddedHome.home._id, homeCreated._id)
 })
 
-test('Delete a home from traveler', async t => {
-  t.plan(4)
-  const travelerToCreate = {
-    name: 'Garavel Usta',
-    age: 100
-  }
+// test('Delete a home from traveler', async t => {
+//   t.plan(4)
+//   const travelerToCreate = {
+//     name: 'Garavel Usta',
+//     age: 100
+//   }
 
-  const travelerCreated = (await request(app)
-    .post('/traveler')
-    .send(travelerToCreate)).body
+//   const travelerCreated = (await request(app)
+//     .post('/traveler')
+//     .send(travelerToCreate)).body
 
-  const homeToCreate = {
-    owner: travelerCreated._id,
-    location: 'Gora'
-  }
+//   const homeToCreate = {
+//     owner: travelerCreated._id,
+//     location: 'Gora'
+//   }
 
-  const addHomeRes = await request(app).post(`/traveler/${travelerCreated._id}/home/add/`).send(homeToCreate)
+//   const addHomeRes = await request(app).post(`/traveler/${travelerCreated._id}/home/add/`).send(homeToCreate)
 
-  const travelerAddedHome = (await request(app).get(`/traveler/${travelerCreated._id}/json`)).body
+//   const travelerAddedHome = (await request(app).get(`/traveler/${travelerCreated._id}/json`)).body
 
-  const homeCreated = (await request(app).get(`/home/${travelerAddedHome.home._id}/json`)).body
+//   const homeCreated = (await request(app).get(`/home/${travelerAddedHome.home._id}/json`)).body
 
-  const deleteHomeRes = await request(app).delete(`/traveler/${travelerAddedHome._id}/home`)
-  t.is(deleteHomeRes.status, 200)
-  t.is(deleteHomeRes.ok, true)
+//   const deleteHomeRes = await request(app).delete(`/traveler/${travelerAddedHome._id}/home`)
+//   t.is(deleteHomeRes.status, 200)
+//   t.is(deleteHomeRes.ok, true)
 
-  const fetchHome = await request(app).get(`/home/${homeCreated._id}`)
-  t.is(fetchHome.status, 404)
+//   const fetchHome = await request(app).get(`/home/${homeCreated._id}`)
+//   t.is(fetchHome.status, 404)
 
-  const travelerDeletedHome = (await request(app).get(`/traveler/${travelerCreated._id}/json`)).body
-  t.is(travelerDeletedHome.home, undefined)
-})
+//   const travelerDeletedHome = (await request(app).get(`/traveler/${travelerCreated._id}/json`)).body
+//   t.is(travelerDeletedHome.home, undefined)
+// })
+
+// test('Send request to a host as a traveler', async t => {
+//   const hostToCreate = {
+//     name: 'Garavel Usta',
+//     age: 100
+//   }
+
+//   const hostCreated = (await request(app)
+//     .post('/traveler')
+//     .send(hostToCreate)).body
+  
+//   const homeToCreate = {
+//     owner: hostCreated._id,
+//     location: 'Gora'
+//   }
+
+//   const addHomeRes = await request(app).post(`/traveler/${hostCreated._id}/home/add/`).send(homeToCreate)
+
+//   const homeCreated = (await request(app).get(`/home/${travelerAddedHome.home._id}/json`)).body
+  
+//   const travelerToCreate = {
+//     name: 'Arif Isik',
+//     age: 30
+//   }
+
+//   const travelerCreated = (await request(app)
+//     .post('/traveler')
+//     .send(travelerToCreate)).body
+
+//   const requestRes = await request(app).post(`/traveler/${travelerCreated._id}/home/${homeCreated._id}`)
+//   t.is(requestRes.status, 200)
+
+//   const travelerSentRequest = (await request(app).get(`/traveler/${travelerCreated._id}`)).body
+//   const hostRequested = (await request(app).get(`/traveler/${hostCreated._id}`)).body
+//   t.is(travelerSentRequest.bookRequest, hostRequested.bookRequest)
+// })
+
+// test('Accept a request as a host', async t => {
+//   const hostToCreate = {
+//     name: 'Garavel Usta',
+//     age: 100
+//   }
+
+//   const hostCreated = (await request(app)
+//     .post('/traveler')
+//     .send(hostToCreate)).body
+  
+//   const homeToCreate = {
+//     owner: hostCreated._id,
+//     location: 'Gora'
+//   }
+
+//   const addHomeRes = await request(app).post(`/traveler/${hostCreated._id}/home/add/`).send(homeToCreate)
+
+//   const homeCreated = (await request(app).get(`/home/${travelerAddedHome.home._id}/json`)).body
+  
+//   const travelerToCreate = {
+//     name: 'Arif Isik',
+//     age: 30
+//   }
+
+//   const travelerCreated = (await request(app)
+//     .post('/traveler')
+//     .send(travelerToCreate)).body
+
+//   const requestRes = await request(app).post(`/traveler/${travelerCreated._id}/home/${homeCreated._id}`)
+
+//   const bookRequestCreated = (await request(app).get(`/traveler/${travelerCreated._id}`)).body.bookRequest
+
+//   const replyTravelerRes = await request(app).post(`/traveler/${travelerCreated._id}/request/${bookRequestCreated._id}/accept`)
+//   t.is(replyTravelerRes.status, 200)
+
+//   const travelerReplied = (await request(app).get(`/traveler/${travelerCreated._id}`)).body
+//   const homeSentReply = (await request(app).get(`/traveler/${hostCreated._id}`)).body
+  
+//   t.is(travelerReplied.bookRequest, homeSentReply.bookRequest)
+//   t.is(hostSentReply.home.guests, travelerReplied)
+// })

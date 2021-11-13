@@ -1,14 +1,20 @@
 const BaseService = require('./base-service')
 const TravelerModel = require('../models/traveler')
 const HomeService = require('./home-service')
-const RequestModel = require('../models/request')
+const BookingModel = require('../models/booking')
 
 class TravelerService extends BaseService {
     model = TravelerModel
 
-    async addHome(traveler, travelerHome) {
-        traveler.home = travelerHome
+    async addHome(travelerId, homeLocation) {
+        const traveler = await this.find(travelerId)
+
+        const home = await HomeService.add({owner: traveler, location: homeLocation})
+        traveler.home = home
+
         await traveler.save()
+        
+        return home
     }
 
     async deleteHome(traveler) {
@@ -18,13 +24,15 @@ class TravelerService extends BaseService {
     }
 
     async askHost(traveler, home, owner) {
-        const request = await RequestModel.create({requester: traveler, home: home, status: 'pending'})
-        console.log('test', traveler.bookRequest)
+        const request = await BookingModel.create({requester: traveler, home: home, status: 'pending'})
+
         traveler.bookRequest.push(request)
         owner.bookRequest.push(request)
 
         await traveler.save()
         await owner.save()
+
+        return request
     }
 
     async replyTraveler(host, bookRequest, response) {
@@ -39,6 +47,8 @@ class TravelerService extends BaseService {
             bookRequest.status = 'cancelled'
             await bookRequest.save()
         }
+
+        return bookRequest
     }
 }
 

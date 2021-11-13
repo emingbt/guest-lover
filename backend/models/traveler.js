@@ -12,9 +12,9 @@ const TravelerSchema = new mongoose.Schema({
         required: true,
         min: 18
     },
-    bookRequest: [{
+    bookings: [{  // cogullastir 
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Request',
+        ref: 'Booking',
         autopopulate: {
             maxDepth: 1
         }
