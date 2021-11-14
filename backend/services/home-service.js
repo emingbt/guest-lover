@@ -1,8 +1,28 @@
-const BaseService = require('./base-service')
 const HomeModel = require('../models/home')
+const BaseService = require('./base-service')
+const TravelerService = require('./traveler-service')
 
 class HomeService extends BaseService {
-    model = HomeModel
+    async addHome(travelerId, homeLocation) {
+        const traveler = await TravelerService.find(travelerId)
+ 
+        const home = await this.insert({owner: traveler, location: homeLocation})
+        traveler.home = home
+ 
+        await traveler.save()
+ 
+        return home
+     }
+ 
+     async deleteHome(travelerId) { //remove olabilir, olsa daha iyi olur, olsun
+         const traveler = await TravelerService.find(travelerId)
+
+         await this.remove(traveler.home)
+ 
+         traveler.home = undefined
+ 
+         await traveler.save()
+     }
 }
 
-module.exports = new HomeService()
+module.exports = new HomeService(HomeModel)

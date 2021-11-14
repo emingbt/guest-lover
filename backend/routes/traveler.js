@@ -3,8 +3,7 @@ const router = express.Router()
 
 const TravelerService = require('../services/traveler-service')
 const HomeService = require('../services/home-service')
-
-const BookingModel = require('../models/booking')
+const BookingService = require('../services/booking-service')
 
 router.get('/all', async (req, res) => {
     const travelers = await TravelerService.findAll()
@@ -29,51 +28,58 @@ router.get('/:id/json', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    const traveler = await TravelerService.add(req.body)
+    const traveler = await TravelerService.insert(req.body)
     res.send(traveler)
 })
 
 router.delete('/:id', async (req, res) => {
-    await TravelerService.del(req.params.id)
+    await TravelerService.remove(req.params.id)
     res.send('OK')
 })
 
-router.delete('/all/:name', async (req, res) => {
-    await TravelerService.delMany(req.params.name)
+router.delete('/all/:name', async (req, res) => { // for the tests
+    await TravelerService.removeBy('name', req.params.name)
     res.send("OK")
 })
 
 router.post('/:id/home/add/', async (req, res) => {
-    const home = await TravelerService.addHome(req.params.id, req.body.location)
-
+    const home = await HomeService.addHome(req.params.id, req.body.location)
     res.send(home)
 })
 
 router.delete('/:id/home', async (req, res) => {
-    const traveler = await TravelerService.find(req.params.id)
-
-    await TravelerService.deleteHome(traveler)
-
+    await HomeService.deleteHome(req.params.id)
     res.send('OK')
 })
 
-router.post('/:id/home/:homeId', async (req, res) => {
-    const traveler = await TravelerService.find(req.params.id)
-    const home = await HomeService.find(req.params.homeId)
-    const owner = await TravelerService.find(home.owner)
+router.get('/:id/home/all', async (req, res) => {
+    const homes = await HomeService.findAll()
+})
 
-    const booking = await TravelerService.askHost(traveler, home, owner)
+router.post('/:id/home/:homeId', async (req, res) => {
+    const travelerId = req.params.id
+    const homeId = req.params.homeId
+
+    const booking = await BookingService.askHost(travelerId, homeId)
 
     res.send(booking)
 })
 
-router.patch('/:id/requests/:requestId/:response', async (req, res) => {
-    // post ->> patch
-    const host = await TravelerService.find(req.params.id)
-    const bookRequest = await RequestModel.findById(req.params.requestId)
+router.patch('/:id/replyBooking/:bookingId/:response', async (req, res) => {
+    const ownerId = req.params.id
+    const bookingId = req.params.bookingId
     const response = req.params.response
 
-    const booking = await TravelerService.replyTraveler(host, bookRequest, response)
+    const booking = await BookingService.replyTraveler(ownerId, bookingId, response)
+
+    res.send(booking)
+})
+
+router.patch('/:id/finishBooking/:bookingId', async (req, res) => {
+    const ownerId = req.params.id
+    const bookingId = req.params.bookingId
+
+    const booking = await BookingService.finishBook(ownerId, bookingId)
 
     res.send(booking)
 })

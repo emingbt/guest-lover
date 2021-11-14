@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const autopopulate = require('mongoose-autopopulate')
 
-const TravelerSchema = new mongoose.Schema({
+const TravelerSchema = new mongoose.Schema({ //traveler degil de user denilebilir
     name: {
         type: String,
         required: true,
@@ -12,7 +12,7 @@ const TravelerSchema = new mongoose.Schema({
         required: true,
         min: 18
     },
-    bookings: [{  // cogullastir 
+    bookings: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Booking',
         autopopulate: {

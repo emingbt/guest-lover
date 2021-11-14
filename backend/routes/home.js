@@ -28,12 +28,12 @@ router.get('/:id/json', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const home = await HomeService.add(req.body)
+  const home = await HomeService.insert(req.body)
   res.send(home)
 })
 
 router.delete('/:id', async (req, res) => {
-  const home = await HomeService.del(req.params.id)
+  const home = await HomeService.remove(req.params.id)
   res.send(home)
 })
 

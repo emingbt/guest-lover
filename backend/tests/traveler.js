@@ -1,7 +1,7 @@
 const test = require('ava')
 const request = require('supertest')
 const app = require('../app')
-
+// o kadar cok sey degisti ki hepsini bastan yazmak gerekicek iyiki bitirmemisim :D
 test('Create new traveler', async t => {
   t.plan(3)
   const travelerToCreate = {
