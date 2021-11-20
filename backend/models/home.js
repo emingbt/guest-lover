@@ -1,16 +1,16 @@
 const mongoose = require('mongoose')
 const autopopulate = require('mongoose-autopopulate')
 
-const HomeSchema = new mongoose.Schema({
+const HomeSchema = new mongoose.Schema({// bir ara rating eklenmeli ama baska bir model olarak, ama home a mi konur yoksa travelera mi bilemedim
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Traveler',
-        autopopulate: {
-            maxDepth: 1
-        }
+        required: true
     },
-    location: String,
-    guests: Array
+    location: {
+        type: String,
+        required: true
+    },
 })
 
 HomeSchema.plugin(autopopulate)
