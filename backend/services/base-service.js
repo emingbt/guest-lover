@@ -1,21 +1,39 @@
-module.exports = class Service {
+class BaseService {
+    constructor(model) {
+        this.model = model
+    }
+
     async findAll() {
         return this.model.find()
     }
 
-    async add(item) {
-        return this.model.create(item)
+    async insert(object) {
+        return await this.model.create(object)
     }
 
-    async del(itemId) {
-        return this.model.deleteOne({_id: itemId})
+    async update(id, object) {
+        return this.model.findByIdAndUpdate(id, object)
     }
 
-    async delMany(itemName) {
-        return this.model.deleteMany({name: itemName})
+    async remove(value) {
+        return this.model.deleteOne({_id: value})
     }
 
-    async find(itemId) {
-        return this.model.findById(itemId)
+    async removeBy(property, value) {
+        return this.model.deleteMany({[property]: value})
     }
-}
+
+    async find(id) {
+        return this.model.findById(id)
+    }
+
+    async query(object) {
+        return this.model.find(object)
+    }
+
+    async findBy(property, value) {
+        return this.model.find({[property]: value})
+    }
+  }
+  
+  module.exports = BaseService

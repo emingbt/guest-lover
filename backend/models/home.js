@@ -5,12 +5,16 @@ const HomeSchema = new mongoose.Schema({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Traveler',
-        autopopulate: {
-            maxDepth: 1
-        }
+        required: true
     },
-    location: String,
-    guests: Array
+    location: {
+        type: String,
+        required: true
+    },
+    ratings: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Rating',
+    }]
 })
 
 HomeSchema.plugin(autopopulate)
