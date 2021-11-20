@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "ava --verbose",
-    "test-coverage": "nyc ava --verbose"
+    "test-coverage": "nyc ava --verbose",
+    "watch": "nodemon index.js"
   },
   "author": "emingbt",
   "license": "MIT",

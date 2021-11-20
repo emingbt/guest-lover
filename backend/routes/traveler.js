@@ -4,8 +4,10 @@ const router = express.Router()
 const TravelerService = require('../services/traveler-service')
 const HomeService = require('../services/home-service')
 const BookingService = require('../services/booking-service')
+const TravelerModel = require('../models/traveler')
+const HomeModel = require('../models/home')
 
-router.get('/all', async (req, res) => {
+router.get('/all', async (req, res) => { // all kalkicak
     const travelers = await TravelerService.findAll()
     res.render('list', {items: travelers})
 })
@@ -42,9 +44,9 @@ router.delete('/all/:name', async (req, res) => { // for the tests
     res.send("OK")
 })
 
-router.post('/:id/home/add/', async (req, res) => {
+router.post('/:id/home/add/', async (req, res) => { // add i kaldir
     const home = await HomeService.addHome(req.params.id, req.body.location)
-    res.send(home)
+    res.send({home})
 })
 
 router.delete('/:id/home', async (req, res) => {
@@ -78,8 +80,9 @@ router.patch('/:id/replyBooking/:bookingId/:response', async (req, res) => {
 router.patch('/:id/finishBooking/:bookingId', async (req, res) => {
     const ownerId = req.params.id
     const bookingId = req.params.bookingId
+    const rating = req.body
 
-    const booking = await BookingService.finishBook(ownerId, bookingId)
+    const booking = await BookingService.finishBook(ownerId, bookingId, rating)
 
     res.send(booking)
 })

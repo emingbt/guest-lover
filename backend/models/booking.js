@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const autopopulate = require('mongoose-autopopulate')
 
-const BookingSchema = new mongoose.Schema({ // buraya bir de owner koyulabilir ama emin degilim
+const BookingSchema = new mongoose.Schema({
     requester: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Traveler',

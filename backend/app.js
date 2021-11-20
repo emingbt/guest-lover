@@ -12,7 +12,7 @@ const app = express()
 app.set('view engine', 'pug')
 app.use(express.json())
 
-app.use('/traveler', travelerRouter)
+app.use('/traveler', travelerRouter) //travelers olacak
 app.use('/home', homeRouter)
 
 app.get('/', (req, res) => {

@@ -7,7 +7,7 @@ class HomeService extends BaseService {
         const traveler = await TravelerService.find(travelerId)
  
         const home = await this.insert({owner: traveler, location: homeLocation})
-        traveler.home = home
+        traveler.home = home.toObject()
  
         await traveler.save()
  
