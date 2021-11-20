@@ -12,8 +12,8 @@ const app = express()
 app.set('view engine', 'pug')
 app.use(express.json())
 
-app.use('/traveler', travelerRouter)
-app.use('/home', homeRouter)
+app.use('/travelers', travelerRouter)
+app.use('/homes', homeRouter)
 
 app.get('/', (req, res) => {
   res.render('index')
