@@ -10,11 +10,7 @@ const HomeSchema = new mongoose.Schema({
     location: {
         type: String,
         required: true
-    },
-    ratings: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Rating',
-    }]
+    }
 })
 
 HomeSchema.plugin(autopopulate)
