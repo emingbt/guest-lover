@@ -24,6 +24,18 @@ const BookingSchema = new mongoose.Schema({
         'cancelled'
       ],
       required: true
+    },
+    rating: {
+      type: Object,
+      stars: {
+        type: Number,
+        min: 1,
+        max: 5,
+        required: true
+      },
+      message: {
+        type: String
+      }
     }
 })
 

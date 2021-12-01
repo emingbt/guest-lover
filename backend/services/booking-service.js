@@ -2,7 +2,6 @@ const BookingModel = require('../models/booking')
 const BaseService = require('./base-service')
 const TravelerService = require('./traveler-service')
 const HomeService = require('./home-service')
-const RatingService = require('./rating-service')
 
 class BookingService extends BaseService {
   async askHost(travelerId, homeId) {
@@ -40,18 +39,14 @@ class BookingService extends BaseService {
   async finishBook(ownerId, bookingId, ratingBody) {
     const owner = await TravelerService.find(ownerId)
     const booking = await this.find(bookingId)
-    const home = await HomeService.find(booking.home)
 
     const ratingStars = ratingBody.stars
     const ratingMessage = ratingBody.message
-    
-    const rating = await RatingService.insert({booking:booking, stars: ratingStars, message: ratingMessage})
 
     booking.status = 'past'
-    home.ratings.push(rating.toObject())
+    booking.rating = (ratingBody)
 
     await booking.save()
-    await home.save()
 
     return booking
   }
