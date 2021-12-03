@@ -3,16 +3,16 @@ const router = express.Router()
 
 const TravelerService = require('../services/traveler-service')
 const HomeService = require('../services/home-service')
-const BookingService = require('../services/booking-service')
+const VisitService = require('../services/visit-service')
 const TravelerModel = require('../models/traveler')
 const HomeModel = require('../models/home')
 
-router.get('/all', async (req, res) => { // all kalkicak
+router.get('/', async (req, res) => {
     const travelers = await TravelerService.findAll()
     res.render('list', {items: travelers})
 })
 
-router.get('/all/json', async (req, res) => {
+router.get('/json', async (req, res) => {
     const travelers = await TravelerService.findAll()
     res.send(travelers)
 })
@@ -44,7 +44,7 @@ router.delete('/all/:name', async (req, res) => { // for the tests
     res.send("OK")
 })
 
-router.post('/:id/home/add/', async (req, res) => { // add i kaldir
+router.post('/:id/home/', async (req, res) => {
     const home = await HomeService.addHome(req.params.id, req.body.location)
     res.send({home})
 })
@@ -54,37 +54,33 @@ router.delete('/:id/home', async (req, res) => {
     res.send('OK')
 })
 
-router.get('/:id/home/all', async (req, res) => {
-    const homes = await HomeService.findAll()
-})
-
-router.post('/:id/home/:homeId', async (req, res) => {
+router.post('/:id/visit/:homeId', async (req, res) => {
     const travelerId = req.params.id
     const homeId = req.params.homeId
 
-    const booking = await BookingService.askHost(travelerId, homeId)
+    const visit = await VisitService.askHost(travelerId, homeId)
 
-    res.send(booking)
+    res.send(visit)
 })
 
-router.patch('/:id/replyBooking/:bookingId/:response', async (req, res) => {
+router.patch('/:id/visit/:visitId/:response', async (req, res) => {
     const ownerId = req.params.id
-    const bookingId = req.params.bookingId
+    const visitId = req.params.visitId
     const response = req.params.response
 
-    const booking = await BookingService.replyTraveler(ownerId, bookingId, response)
+    const visit = await VisitService.replyTraveler(ownerId, visitId, response)
 
-    res.send(booking)
+    res.send(visit)
 })
 
-router.patch('/:id/finishBooking/:bookingId', async (req, res) => {
+router.patch('/:id/visit/:visitId', async (req, res) => {
     const ownerId = req.params.id
-    const bookingId = req.params.bookingId
+    const visitId = req.params.visitId
     const rating = req.body
 
-    const booking = await BookingService.finishBook(ownerId, bookingId, rating)
+    const visit = await VisitService.finishBook(ownerId, visitId, rating)
 
-    res.send(booking)
+    res.send(visit)
 })
 
 module.exports = router

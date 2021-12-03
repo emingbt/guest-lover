@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const autopopulate = require('mongoose-autopopulate')
 
-const BookingSchema = new mongoose.Schema({
+const VisitSchema = new mongoose.Schema({
     requester: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Traveler',
@@ -31,7 +31,7 @@ const BookingSchema = new mongoose.Schema({
         type: Number,
         min: 1,
         max: 5,
-        required: true
+        required: true // hoaydaaa
       },
       message: {
         type: String
@@ -39,8 +39,8 @@ const BookingSchema = new mongoose.Schema({
     }
 })
 
-BookingSchema.plugin(autopopulate)
+VisitSchema.plugin(autopopulate)
 
-const BookingModel = mongoose.model('Booking', BookingSchema)
+const VisitModel = mongoose.model('Visit', VisitSchema)
 
-module.exports = BookingModel
+module.exports = VisitModel
