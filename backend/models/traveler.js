@@ -12,9 +12,9 @@ const TravelerSchema = new mongoose.Schema({
         required: true,
         min: 18
     },
-    bookings: [{
+    visits: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Booking',
+        ref: 'Visit',
         autopopulate: {
             maxDepth: 1
         }
